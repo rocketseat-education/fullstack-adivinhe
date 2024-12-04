@@ -1,25 +1,20 @@
 import styles from "./app.module.css"
 import { useEffect, useState } from "react"
 
-import tip from "./assets/tip.svg"
-import logo from "./assets/logo.png"
-import restart from "./assets/restart.svg"
-
 import { Challenge, WORDS } from "./utils/words"
 
+import { Tip } from "./components/tip"
 import { Input } from "./components/input"
-import { Button } from "./components/button"
+import { Header } from "./components/header"
 import { Letter } from "./components/letter"
-
-type Guess = {
-  value: string
-  correct: boolean
-}
+import { Button } from "./components/button"
+import { Loading } from "./components/loading"
+import { GuessProps, LettersUsed } from "./components/letters-used"
 
 export default function App() {
   const [score, setScore] = useState(0)
   const [letter, setLetter] = useState("")
-  const [guesses, setGuesses] = useState<Guess[]>([])
+  const [guesses, setGuesses] = useState<GuessProps[]>([])
   const [challenge, setChallenge] = useState<Challenge | null>(null)
 
   const ATTEMPT_LIMIT = 10
@@ -95,36 +90,23 @@ export default function App() {
     }, 200)
   }, [score, guesses.length])
 
+  if (!challenge) {
+    return <Loading />
+  }
+
   return (
     <div className={styles.container}>
       <main>
-        <img src={logo} alt="Logo" className={styles.logo} />
+        <Header
+          max={ATTEMPT_LIMIT}
+          current={guesses.length}
+          onRestart={handleRestartGame}
+        />
 
-        <header>
-          <span className={styles.attempts}>
-            <strong>{guesses.length}</strong> de {ATTEMPT_LIMIT} tentativas
-          </span>
-
-          <button
-            type="button"
-            className={styles.restart}
-            onClick={handleRestartGame}
-          >
-            <img src={restart} alt="Ícone de reiniciar" />
-          </button>
-        </header>
-
-        <div className={styles.tip}>
-          <img src={tip} alt="Ícone de dica" className={styles.icon} />
-
-          <div>
-            <h3>Dica</h3>
-            <p>{challenge?.tip}</p>
-          </div>
-        </div>
+        <Tip tip={challenge.tip} />
 
         <div className={styles.word}>
-          {challenge?.word.split("").map((letter, index) => {
+          {challenge.word.split("").map((letter, index) => {
             const guess = guesses.find(
               (guess) => guess.value.toUpperCase() === letter.toUpperCase()
             )
@@ -153,20 +135,7 @@ export default function App() {
           <Button title="Confirmar" onClick={handleConfirm} />
         </div>
 
-        <footer>
-          <h5>Letras utilizadas</h5>
-
-          <div>
-            {guesses.map((guess) => (
-              <Letter
-                key={guess.value}
-                value={guess.value}
-                size="small"
-                color={guess.correct ? "correct" : "wrong"}
-              />
-            ))}
-          </div>
-        </footer>
+        <LettersUsed data={guesses} />
       </main>
     </div>
   )
