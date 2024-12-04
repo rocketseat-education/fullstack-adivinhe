@@ -3,13 +3,13 @@ import { useEffect, useState } from "react"
 
 import { Challenge, WORDS } from "./utils/words"
 
-import { Tip } from "./components/tip"
-import { Input } from "./components/input"
-import { Header } from "./components/header"
-import { Letter } from "./components/letter"
-import { Button } from "./components/button"
-import { Loading } from "./components/loading"
-import { GuessProps, LettersUsed } from "./components/letters-used"
+import { Tip } from "./components/Tip"
+import { Input } from "./components/Input"
+import { Header } from "./components/Header"
+import { Letter } from "./components/Letter"
+import { Button } from "./components/Button"
+import { Loading } from "./components/Loading"
+import { GuessProps, LettersUsed } from "./components/LettersUsed"
 
 export default function App() {
   const [score, setScore] = useState(0)

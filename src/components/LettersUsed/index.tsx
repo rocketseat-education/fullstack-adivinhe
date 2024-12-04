@@ -1,6 +1,6 @@
 import styles from "./styles.module.css"
 
-import { Letter } from "../letter"
+import { Letter } from "../Letter"
 
 export type GuessProps = {
   value: string
